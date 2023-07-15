@@ -6,6 +6,7 @@ public class PlatformerController : MonoBehaviour
 {
     private PlatformerAnimation anim;
     public Rigidbody rb;
+    private GameObject cam;
 
     [Header("Mouvement")] 
     public Vector2 moveInput;
@@ -18,17 +19,32 @@ public class PlatformerController : MonoBehaviour
     float LastOnGroundTime;
     bool isJumping;
 
+    [Header("Switch Perspectives")]
+    [SerializeField] GameObject vcam3d;
+    [SerializeField] GameObject vcam2d;
+    [SerializeField] float switchDelay = 4;
+    [SerializeField] float switchFreezeTime;
+    public bool is2d;
+    float LastPressedPerspTime;
+    float LastSwitchTime;
+    bool isSwitchingPersp;
+
     [Header("Ground Check")]
     [SerializeField] float playerHeight;
     [SerializeField] LayerMask ground;
 
     [Header("Keybinds")]
     [SerializeField] KeyCode jumpKey = KeyCode.Space;
+    [SerializeField] KeyCode perspKey = KeyCode.E;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         anim = GetComponent<PlatformerAnimation>();
+
+        cam = GameObject.FindWithTag("MainCamera");
+        vcam3d = GameObject.Find("vcam3d");
+        vcam2d = GameObject.Find("vcamNOT3d");
     }
 
     void Update()
@@ -39,14 +55,18 @@ public class PlatformerController : MonoBehaviour
 
         if(Input.GetKey(jumpKey))
             OnJumpInput();
+
+        if(Input.GetKey(perspKey))
+            OnPerspInput();
         #endregion
 
         //ground check
         if (Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, ground))
         {
             LastOnGroundTime = coyoteTime;
-            
         }
+
+        transform.rotation = Quaternion.Euler(0f, cam.transform.rotation.eulerAngles.y, 0f);
 
         //clear jumping state if not ascending
         if (isJumping && rb.velocity.y < 0)
@@ -54,6 +74,8 @@ public class PlatformerController : MonoBehaviour
         //timers
         LastPressedJumpTime -= Time.deltaTime;
         LastOnGroundTime -= Time.deltaTime;
+        LastPressedPerspTime -= Time.deltaTime;
+        LastSwitchTime -= Time.deltaTime;
     }
 
     void FixedUpdate()
@@ -69,12 +91,21 @@ public class PlatformerController : MonoBehaviour
             anim.jump = true;
         }
 
+        //change gravity
         if(rb.velocity.y < -0.2f)
         {
             rb.velocity += Vector3.up * Physics.gravity.y * 1.5f * Time.deltaTime;
         } else if (rb.velocity.y > -0.2f && !Input.GetKey(jumpKey))
         {
             rb.velocity += Vector3.up * Physics.gravity.y * 3 * Time.deltaTime;
+        }
+
+        //switch perspectives
+        if (CanSwitchPersp() && LastPressedPerspTime > 0)
+        {
+            isSwitchingPersp = true;
+
+            SwitchPerspective();
         }
     }
 
@@ -131,12 +162,41 @@ public class PlatformerController : MonoBehaviour
         
         rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
     }
+
+    void SwitchPerspective()
+    {
+        if(is2d) {
+            is2d = false;
+            vcam2d.SetActive(false);
+            vcam2d.SetActive(true);
+        } else if(!is2d) {
+            is2d = true;
+            vcam2d.SetActive(true);
+            vcam2d.SetActive(false);
+        }
+        
+        LastSwitchTime = switchDelay;
+        isSwitchingPersp = false;
+    }
+
+    #region Input Checks
     public void OnJumpInput()
 	{
 		LastPressedJumpTime = 0.1f;
 	}
+    public void OnPerspInput()
+    {
+        LastPressedPerspTime = 0.1f;
+    }
+    #endregion
+    #region Checks
     public bool CanJump()
     {
 		return LastOnGroundTime > 0 && !isJumping && this.gameObject.CompareTag("Player");
     }
+    public bool CanSwitchPersp()
+    {
+		return LastSwitchTime < 0 && !isSwitchingPersp && this.gameObject.CompareTag("Player");
+    }
+    #endregion
 }
