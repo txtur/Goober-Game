@@ -386,6 +386,7 @@ GameObject:
   m_Component:
   - component: {fileID: 909480608}
   - component: {fileID: 909480609}
+  - component: {fileID: 909480610}
   m_Layer: 0
   m_Name: vcamNOT3d
   m_TagString: Untagged
@@ -447,6 +448,22 @@ MonoBehaviour:
         m_Calls: []
   m_LegacyBlendHint: 0
   m_ComponentOwner: {fileID: 43005060}
+--- !u!114 &909480610
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 909480607}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ed0bc6f7aaacd34289abc8f212290e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 0}
+  cam: {fileID: 0}
+  to2d: 0
+  to3d: 0
 --- !u!1 &1087387916
 GameObject:
   m_ObjectHideFlags: 0
@@ -555,8 +572,8 @@ GameObject:
   - component: {fileID: 1101852111}
   - component: {fileID: 1101852119}
   - component: {fileID: 1101852109}
-  - component: {fileID: 1101852115}
-  - component: {fileID: 1101852118}
+  - component: {fileID: 1101852121}
+  - component: {fileID: 1101852120}
   m_Layer: 0
   m_Name: Character Man
   m_TagString: Player
@@ -596,49 +613,6 @@ Transform:
   m_Father: {fileID: 2121584061}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1101852115
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1101852108}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 63b6d3cbf1f9469408bfd85a6d13e875, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  rb: {fileID: 0}
-  cam: {fileID: 0}
-  start2d: 1
-  moveInput: {x: 0, y: 0}
-  runMaxSpeed: 9
-  accel: 11
-  jumpForce: 10
-  coyoteTime: 0.1
-  vcam3d: {fileID: 0}
-  vcam2d: {fileID: 0}
-  switchDelay: 4
-  switchFreezeTime: 0
-  is2d: 1
-  playerHeight: 2
-  ground:
-    serializedVersion: 2
-    m_Bits: 8
-  jumpKey: 32
-  perspKey: 101
---- !u!114 &1101852118
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1101852108}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8c0a7ab28a11aa24a9fd2085e8aa376e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!65 &1101852119
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -652,6 +626,49 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 2, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1101852120
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1101852108}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e80010349663f9c438a6ce2c638eea82, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1101852121
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1101852108}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4061154cad5c36040a4b9d4186311260, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rb: {fileID: 0}
+  cam: {fileID: 0}
+  start2d: 1
+  moveInput: {x: 0, y: 0}
+  runMaxSpeed: 9
+  accel: 11
+  jumpForce: 8
+  coyoteTime: 0.1
+  vcam3d: {fileID: 0}
+  vcam2d: {fileID: 0}
+  switchDelay: 4
+  switchFreezeTime: 0
+  is2d: 1
+  playerHeight: 0
+  ground:
+    serializedVersion: 2
+    m_Bits: 8
+  jumpKey: 32
+  perspKey: 101
 --- !u!1 &1423321214
 GameObject:
   m_ObjectHideFlags: 0
