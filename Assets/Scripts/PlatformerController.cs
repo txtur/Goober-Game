@@ -6,7 +6,9 @@ public class PlatformerController : MonoBehaviour
 {
     private PlatformerAnimation anim;
     public Rigidbody rb;
-    private GameObject cam;
+    [SerializeField] GameObject cam;
+    private Camera mainCam;
+    [SerializeField] bool start2d;
 
     [Header("Mouvement")] 
     public Vector2 moveInput;
@@ -24,7 +26,7 @@ public class PlatformerController : MonoBehaviour
     [SerializeField] GameObject vcam2d;
     [SerializeField] float switchDelay = 4;
     [SerializeField] float switchFreezeTime;
-    public bool is2d;
+    public bool is2d = true;
     float LastPressedPerspTime;
     float LastSwitchTime;
     bool isSwitchingPersp;
@@ -43,15 +45,29 @@ public class PlatformerController : MonoBehaviour
         anim = GetComponent<PlatformerAnimation>();
 
         cam = GameObject.FindWithTag("MainCamera");
+        mainCam = cam.GetComponent<Camera>();
         vcam3d = GameObject.Find("vcam3d");
         vcam2d = GameObject.Find("vcamNOT3d");
+
+        if (start2d) {
+            vcam3d.SetActive(false);
+            mainCam.orthographic = true;
+        } else {
+            vcam2d.SetActive(false);
+            mainCam.orthographic = false;
+        }
     }
 
     void Update()
     {
         #region Input
-        moveInput.x = Input.GetAxisRaw("Horizontal");
-        moveInput.y = Input.GetAxisRaw("Vertical");
+        if (is2d) {
+            moveInput.y = Input.GetAxisRaw("Horizontal");
+            moveInput.x = Input.GetAxisRaw("Vertical")* -1;
+        } else if (!is2d) {
+            moveInput.x = Input.GetAxisRaw("Horizontal");
+            moveInput.y = Input.GetAxisRaw("Vertical");
+        }
 
         if(Input.GetKey(jumpKey))
             OnJumpInput();
@@ -105,7 +121,7 @@ public class PlatformerController : MonoBehaviour
         {
             isSwitchingPersp = true;
 
-            SwitchPerspective();
+            StartCoroutine(nameof(SwitchPerspective));
         }
     }
 
@@ -163,20 +179,27 @@ public class PlatformerController : MonoBehaviour
         rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
     }
 
-    void SwitchPerspective()
+    IEnumerator SwitchPerspective()
     {
+        Time.timeScale = 0;
         if(is2d) {
             is2d = false;
             vcam2d.SetActive(false);
-            vcam2d.SetActive(true);
+            vcam3d.SetActive(true);
+            mainCam.orthographic = false;
+            yield return new WaitForSecondsRealtime(1);
         } else if(!is2d) {
             is2d = true;
             vcam2d.SetActive(true);
-            vcam2d.SetActive(false);
+            vcam3d.SetActive(false);
+            yield return new WaitForSecondsRealtime(1);
+            mainCam.orthographic = true;
         }
         
+        Time.timeScale = 1;
         LastSwitchTime = switchDelay;
         isSwitchingPersp = false;
+        yield return null;
     }
 
     #region Input Checks
