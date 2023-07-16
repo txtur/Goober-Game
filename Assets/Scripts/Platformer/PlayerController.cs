@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour
     public Rigidbody rb;
     [SerializeField] GameObject cam;
     private Camera mainCam;
-    [SerializeField] bool start2d;
+    [SerializeField] bool start2d = true;
 
     [Header("Mouvement")] 
     public Vector2 moveInput;
@@ -25,8 +25,7 @@ public class PlayerController : MonoBehaviour
     [Header("Switch Perspectives")]
     [SerializeField] GameObject vcam3d;
     [SerializeField] GameObject vcam2d;
-    [SerializeField] float switchDelay = 4;
-    [SerializeField] float switchFreezeTime;
+    [SerializeField] float switchDelay = 2;
     public bool is2d = true;
     float LastPressedPerspTime;
     float LastSwitchTime;
