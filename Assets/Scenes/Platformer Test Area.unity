@@ -386,8 +386,6 @@ GameObject:
   m_Component:
   - component: {fileID: 909480608}
   - component: {fileID: 909480609}
-  - component: {fileID: 909480611}
-  - component: {fileID: 909480610}
   m_Layer: 0
   m_Name: vcamNOT3d
   m_TagString: Camera
@@ -433,7 +431,7 @@ MonoBehaviour:
   m_Follow: {fileID: 1101852111}
   m_Lens:
     FieldOfView: 60
-    OrthographicSize: 7
+    OrthographicSize: 8
     NearClipPlane: 0.3
     FarClipPlane: 1000
     Dutch: 0
@@ -449,40 +447,6 @@ MonoBehaviour:
         m_Calls: []
   m_LegacyBlendHint: 0
   m_ComponentOwner: {fileID: 43005060}
---- !u!114 &909480610
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 909480607}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e1fb18e4009cd504aa408bc2f7c8fc91, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  to3d: 0
-  to2d: 0
---- !u!95 &909480611
-Animator:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 909480607}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 2e62a6deb27254646aefafb317ba93dd, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &1087387916
 GameObject:
   m_ObjectHideFlags: 0
@@ -644,8 +608,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63b6d3cbf1f9469408bfd85a6d13e875, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  camAnim2d: {fileID: 0}
-  camAnim3d: {fileID: 0}
   rb: {fileID: 0}
   cam: {fileID: 0}
   start2d: 1
@@ -970,9 +932,9 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60
+  field of view: 70
   orthographic: 0
-  orthographic size: 5
+  orthographic size: 6.3
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
@@ -1110,8 +1072,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1920850818}
   - component: {fileID: 1920850819}
-  - component: {fileID: 1920850820}
-  - component: {fileID: 1920850821}
   m_Layer: 0
   m_Name: vcam3d
   m_TagString: Camera
@@ -1156,8 +1116,8 @@ MonoBehaviour:
   m_LookAt: {fileID: 0}
   m_Follow: {fileID: 1101852111}
   m_Lens:
-    FieldOfView: 60
-    OrthographicSize: 5
+    FieldOfView: 70
+    OrthographicSize: 6.3
     NearClipPlane: 0.3
     FarClipPlane: 1000
     Dutch: 0
@@ -1173,40 +1133,6 @@ MonoBehaviour:
         m_Calls: []
   m_LegacyBlendHint: 0
   m_ComponentOwner: {fileID: 1973557425}
---- !u!95 &1920850820
-Animator:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1920850817}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 2e62a6deb27254646aefafb317ba93dd, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &1920850821
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1920850817}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e1fb18e4009cd504aa408bc2f7c8fc91, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  to3d: 0
-  to2d: 0
 --- !u!1 &1973557424
 GameObject:
   m_ObjectHideFlags: 3

@@ -372,7 +372,7 @@ AnimatorStateMachine:
     m_Position: {x: 600, y: 120, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -6871650766225790167}
-    m_Position: {x: 800, y: -230, z: 0}
+    m_Position: {x: 680, y: -170, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 5825485671946806999}
     m_Position: {x: 250, y: 60, z: 0}
@@ -381,7 +381,7 @@ AnimatorStateMachine:
     m_Position: {x: 600, y: 20, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 4157800264466538866}
-    m_Position: {x: 660, y: -320, z: 0}
+    m_Position: {x: 540, y: -260, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -5317724291521676061}
     m_Position: {x: 420, y: -110, z: 0}
@@ -458,6 +458,12 @@ AnimatorController:
     m_DefaultBool: 0
     m_Controller: {fileID: 0}
   - m_Name: backwards
+    m_Type: 4
+    m_DefaultFloat: 0
+    m_DefaultInt: 0
+    m_DefaultBool: 0
+    m_Controller: {fileID: 0}
+  - m_Name: 2D
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
