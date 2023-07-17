@@ -32,7 +32,6 @@ public class PlayerController : MonoBehaviour
     bool isSwitchingPersp;
     float prevX;
     [SerializeField] float x2d = 15.5f;
-    [SerializeField] float fallCancelTime = 3;
 
     [Header("Ground Check")]
     [SerializeField] float playerHeight;
