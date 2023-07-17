@@ -27,11 +27,12 @@ public class PlayerController : MonoBehaviour
     [SerializeField] GameObject vcam2d;
     [SerializeField] float switchDelay = 2;
     public bool is2d = true;
-    float LastPressedPerspTime;
+    public float LastPressedPerspTime;
     float LastSwitchTime;
     bool isSwitchingPersp;
-    float pervX;
+    float prevX;
     [SerializeField] float x2d = 15.5f;
+    [SerializeField] float fallCancelTime = 3;
 
     [Header("Ground Check")]
     [SerializeField] float playerHeight;
@@ -41,8 +42,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] KeyCode jumpKey = KeyCode.Space;
     [SerializeField] KeyCode perspKey = KeyCode.E;
 
-    void Start()
-    {
+    void Start() {
         rb = GetComponent<Rigidbody>();
         anim = GetComponent<PlayerAnimator>();
         pcam = GameObject.FindWithTag("Camera").GetComponent<PlayerCamera>();
@@ -52,7 +52,7 @@ public class PlayerController : MonoBehaviour
         vcam3d = GameObject.Find("vcam3d");
         vcam2d = GameObject.Find("vcamNOT3d");
 
-        pervX = 0;
+        prevX = 0;
         if (start2d) {
             vcam3d.SetActive(false);
             mainCam.orthographic = true;
@@ -60,12 +60,11 @@ public class PlayerController : MonoBehaviour
         } else {
             vcam2d.SetActive(false);
             mainCam.orthographic = false;
-            transform.position = new Vector3(pervX, transform.position.y, transform.position.z);
+            transform.position = new Vector3(prevX, transform.position.y, transform.position.z);
         }
     }
 
-    void Update()
-    {
+    void Update() {
         #region Input
         if (is2d) {
             moveInput.y = Input.GetAxisRaw("Horizontal");
@@ -83,8 +82,7 @@ public class PlayerController : MonoBehaviour
         #endregion
 
         //ground check
-        if (Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, ground))
-        {
+        if (Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, ground)) {
             LastOnGroundTime = coyoteTime;
         }
 
@@ -100,13 +98,11 @@ public class PlayerController : MonoBehaviour
         LastSwitchTime -= Time.deltaTime;
     }
 
-    void FixedUpdate()
-    {
+    void FixedUpdate() {
         Move();
 
         //jump
-        if (CanJump() && LastPressedJumpTime > 0)
-        {
+        if (CanJump() && LastPressedJumpTime > 0) {
             isJumping = true;
             Jump();
 
@@ -114,25 +110,22 @@ public class PlayerController : MonoBehaviour
         }
 
         //change gravity
-        if(rb.velocity.y < -0.2f)
-        {
+        if(rb.velocity.y < -0.2f) {
             rb.velocity += Vector3.up * Physics.gravity.y * 1.5f * Time.deltaTime;
-        } else if (rb.velocity.y > -0.2f && !Input.GetKey(jumpKey))
-        {
+        } else if (rb.velocity.y > -0.2f && !Input.GetKey(jumpKey)) {
             rb.velocity += Vector3.up * Physics.gravity.y * 3 * Time.deltaTime;
         }
 
         //switch perspectives
-        if (CanSwitchPersp() && LastPressedPerspTime > 0)
-        {
+        if (CanSwitchPersp() && LastPressedPerspTime > 0) {
             isSwitchingPersp = true;
+            isJumping = true;
 
             StartCoroutine(nameof(SwitchPerspective));
         }
     }
 
-    void Move()
-    {
+    void Move() {
         float targetSpeedX = moveInput.x * runMaxSpeed;
         targetSpeedX = Mathf.Lerp(rb.velocity.x, targetSpeedX, 1f);
         float targetSpeedZ = moveInput.y * runMaxSpeed;
@@ -142,19 +135,16 @@ public class PlayerController : MonoBehaviour
         float accelRateZ;
         //get acceleration value based on if you're accelerating or decelerating
         //change multiplier if airborne
-        if(LastOnGroundTime > 0)
-        {
+        if(LastOnGroundTime > 0) {
             accelRateX = (Mathf.Abs(targetSpeedX) > 0.1f) ? accel : accel * 2;
             accelRateZ = (Mathf.Abs(targetSpeedZ) > 0.1f) ? accel : accel * 2;
         }
-        else 
-        {
+        else {
             accelRateX = (Mathf.Abs(targetSpeedX) > 0.1f) ? accel * 0.65f : accel * 1.3f;
             accelRateZ = (Mathf.Abs(targetSpeedZ) > 0.1f) ? accel * 0.65f : accel * 1.3f;
         }
         //increase acceleration at the peak of the jump, makes it more bouncy and responsive
-        if(isJumping && Mathf.Abs(rb.velocity.y) < 1)
-        {
+        if(isJumping && Mathf.Abs(rb.velocity.y) < 1) {
             accelRateX *= 1.1f;
             targetSpeedX *= 1.3f;
             accelRateZ *= 1.1f;
@@ -177,19 +167,30 @@ public class PlayerController : MonoBehaviour
         rb.AddForce(new Vector3(movementX, 0f, movementZ), ForceMode.Force);
     }
 
-    void Jump()
-    {
+    void Jump() {
         //reset y velocity
         rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
         
         rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
     }
 
-    IEnumerator SwitchPerspective()
-    {
+    IEnumerator SwitchPerspective() {
         Time.timeScale = 0;
-        if(is2d) {
-            transform.position = new Vector3(pervX, transform.position.y, transform.position.z);
+        
+        if(!is2d && (Physics.Raycast(transform.position, Vector3.right, 30, ground) || Physics.Raycast(transform.position, Vector3.left, 30, ground))) {
+            pcam.to2d = true;
+            yield return new WaitForSecondsRealtime(2);
+            vcam2d.SetActive(true);
+            vcam3d.SetActive(false);
+            mainCam.orthographic = true;
+            yield return new WaitForSecondsRealtime(0.5f);
+            mainCam.orthographic = false;
+            vcam2d.SetActive(false);
+            vcam3d.SetActive(true);
+            pcam.to3d = true;
+            yield return new WaitForSecondsRealtime(2);
+        } else if(is2d) {
+            transform.position = new Vector3(prevX, transform.position.y, transform.position.z);
             is2d = false;
             mainCam.orthographic = false;
             vcam2d.SetActive(false);
@@ -197,7 +198,7 @@ public class PlayerController : MonoBehaviour
             pcam.to3d = true;
             yield return new WaitForSecondsRealtime(2);
         } else if(!is2d) {
-            pervX = transform.position.x;
+            prevX = transform.position.x;
             is2d = true;
             pcam.to2d = true;
             yield return new WaitForSecondsRealtime(2);
@@ -210,26 +211,23 @@ public class PlayerController : MonoBehaviour
         Time.timeScale = 1;
         LastSwitchTime = switchDelay;
         isSwitchingPersp = false;
+        isJumping = false;
         yield return null;
     }
 
     #region Input Checks
-    public void OnJumpInput()
-	{
+    public void OnJumpInput() {
 		LastPressedJumpTime = 0.1f;
 	}
-    public void OnPerspInput()
-    {
+    public void OnPerspInput() {
         LastPressedPerspTime = 0.1f;
     }
     #endregion
     #region Checks
-    public bool CanJump()
-    {
+    public bool CanJump() {
 		return LastOnGroundTime > 0 && !isJumping && this.gameObject.CompareTag("Player");
     }
-    public bool CanSwitchPersp()
-    {
+    public bool CanSwitchPersp() {
 		return LastSwitchTime < 0 && !isSwitchingPersp && this.gameObject.CompareTag("Player");
     }
     #endregion
