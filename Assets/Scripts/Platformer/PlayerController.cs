@@ -30,6 +30,8 @@ public class PlayerController : MonoBehaviour
     float LastPressedPerspTime;
     float LastSwitchTime;
     bool isSwitchingPersp;
+    float pervX;
+    [SerializeField] float x2d = 15.5f;
 
     [Header("Ground Check")]
     [SerializeField] float playerHeight;
@@ -50,12 +52,15 @@ public class PlayerController : MonoBehaviour
         vcam3d = GameObject.Find("vcam3d");
         vcam2d = GameObject.Find("vcamNOT3d");
 
+        pervX = 0;
         if (start2d) {
             vcam3d.SetActive(false);
             mainCam.orthographic = true;
+            transform.position = new Vector3(x2d, transform.position.y, transform.position.z);
         } else {
             vcam2d.SetActive(false);
             mainCam.orthographic = false;
+            transform.position = new Vector3(pervX, transform.position.y, transform.position.z);
         }
     }
 
@@ -184,6 +189,7 @@ public class PlayerController : MonoBehaviour
     {
         Time.timeScale = 0;
         if(is2d) {
+            transform.position = new Vector3(pervX, transform.position.y, transform.position.z);
             is2d = false;
             mainCam.orthographic = false;
             vcam2d.SetActive(false);
@@ -191,12 +197,14 @@ public class PlayerController : MonoBehaviour
             pcam.to3d = true;
             yield return new WaitForSecondsRealtime(2);
         } else if(!is2d) {
+            pervX = transform.position.x;
             is2d = true;
             pcam.to2d = true;
             yield return new WaitForSecondsRealtime(2);
             vcam2d.SetActive(true);
             vcam3d.SetActive(false);
             mainCam.orthographic = true;
+            transform.position = new Vector3(x2d, transform.position.y, transform.position.z);
         }
         
         Time.timeScale = 1;
